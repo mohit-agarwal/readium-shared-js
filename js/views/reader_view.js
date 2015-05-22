@@ -448,7 +448,6 @@ ReadiumSDK.Views.ReaderView = function(options) {
      * Takes to account the page progression direction to decide to flip to prev or next page.
      */
     this.openPageRight = function() {
-
         if(_package.spine.isLeftToRight()) {
             self.openPageNext();
         }
@@ -521,6 +520,10 @@ ReadiumSDK.Views.ReaderView = function(options) {
     this.updateSettings = function(settingsData) {
 
 //console.debug("UpdateSettings: " + JSON.stringify(settingsData));
+        
+        if (window.orientation === 0 || window.orientation === 180) {
+            settingsData.syntheticSpread = 'single';
+        }
 
         _viewerSettings.update(settingsData);
         
@@ -576,6 +579,7 @@ ReadiumSDK.Views.ReaderView = function(options) {
      * Opens the next page.
      */
     this.openPageNext = function() {
+        
 
         if(self.getCurrentViewType() === ReadiumSDK.Views.ReaderView.VIEW_TYPE_SCROLLED_CONTINUOUS) {
             _currentView.openPageNext(self);
@@ -607,6 +611,7 @@ ReadiumSDK.Views.ReaderView = function(options) {
         openPageRequest.setFirstPage();
 
         openPage(openPageRequest, 2);
+        
     };
 
     /**
@@ -728,7 +733,6 @@ ReadiumSDK.Views.ReaderView = function(options) {
 
     // dir: 0 => new or same page, 1 => previous, 2 => next
     function openPage(pageRequest, dir) {
-
         initViewForItem(pageRequest.spineItem, function(isViewChanged){
 
             if(!isViewChanged) {

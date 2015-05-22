@@ -102,3 +102,9 @@ iframe {
 .mo-active-default {
 
 }
+
+/* Remove grey tap highlight in WebKit */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
