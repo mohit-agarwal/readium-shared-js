@@ -46,6 +46,7 @@ define(["jquery", "underscore", "eventEmitter", "./fixed_view", "../helpers", ".
  * @param {Views.ReaderView.ReaderOptions} options
  * @constructor
  */
+var globalBookmark = "";
 var ReaderView = function (options) {
 
     _.extend(this, new EventEmitter());
@@ -603,6 +604,12 @@ var ReaderView = function (options) {
 
         var currentSpineItem = _spine.getItemById(lastOpenPage.idref);
 
+        // If the current SpineItem is non-linear then go to Bookmarked position when you press Previous button.
+        if( currentSpineItem.linear == "no" ){
+            self.openSpineItemElementCfi(globalBookmark.idref, globalBookmark.contentCFI, self);
+            return;
+        }
+        
         var nextSpineItem = _spine.nextItem(currentSpineItem);
 
         if (!nextSpineItem) {
@@ -639,6 +646,12 @@ var ReaderView = function (options) {
         }
 
         var currentSpineItem = _spine.getItemById(firstOpenPage.idref);
+        
+        // If the current SpineItem is non-linear then go to Bookmarked position when you press Previous button.
+        if( currentSpineItem.linear == "no" ){
+            self.openSpineItemElementCfi(globalBookmark.idref, globalBookmark.contentCFI, self);
+            return;
+        }
 
         var prevSpineItem = _spine.prevItem(currentSpineItem);
 
@@ -941,7 +954,9 @@ var ReaderView = function (options) {
      * @param {object} initiator optional
      */
     this.openSpineItemElementId = function (idref, elementId, initiator) {
-
+        // Bookmark the current position.
+        globalBookmark = _currentView.bookmarkCurrentPage();
+        
         var spineItem = _spine.getItemById(idref);
         if (!spineItem) {
             return false;
