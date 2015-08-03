@@ -46,6 +46,7 @@ define(["jquery", "underscore", "eventEmitter", "./fixed_view", "../helpers", ".
  * @param {Views.ReaderView.ReaderOptions} options
  * @constructor
  */
+
 var globalBookmark = "";
 var ReaderView = function (options) {
 
@@ -603,13 +604,13 @@ var ReaderView = function (options) {
         }
 
         var currentSpineItem = _spine.getItemById(lastOpenPage.idref);
-
-        // If the current SpineItem is non-linear then go to Bookmarked position when you press Previous button.
-        if (!_spine.isValidLinearItem(currentSpineItem)) {
+        
+        // If the current SpineItem is non-linear then go to Bookmarked position when you press Next button.
+        if( currentSpineItem.linear == "no" ){
             self.openSpineItemElementCfi(globalBookmark.idref, globalBookmark.contentCFI, self);
             return;
         }
-        
+
         var nextSpineItem = _spine.nextItem(currentSpineItem);
 
         if (!nextSpineItem) {
@@ -633,28 +634,28 @@ var ReaderView = function (options) {
         }
 
         var paginationInfo = _currentView.getPaginationInfo();
-
+        
         if (paginationInfo.openPages.length == 0) {
             return;
         }
 
         var firstOpenPage = paginationInfo.openPages[0];
 
+        var currentSpineItem = _spine.getItemById(firstOpenPage.idref);
+
         if (firstOpenPage.spineItemPageIndex > 0) {
             _currentView.openPagePrev(self);
             return;
         }
 
-        var currentSpineItem = _spine.getItemById(firstOpenPage.idref);
-        
         // If the current SpineItem is non-linear then go to Bookmarked position when you press Previous button.
-        if (!_spine.isValidLinearItem(currentSpineItem)) {
+        if( currentSpineItem.linear == "no" ){
             self.openSpineItemElementCfi(globalBookmark.idref, globalBookmark.contentCFI, self);
             return;
         }
 
         var prevSpineItem = _spine.prevItem(currentSpineItem);
-
+        
         if (!prevSpineItem) {
             return;
         }
@@ -663,22 +664,6 @@ var ReaderView = function (options) {
         openPageRequest.setLastPage();
 
         openPage(openPageRequest, 1);
-    };
-
-    this.openPageBookmarked = function () {
-
-        var paginationInfo = _currentView.getPaginationInfo();
-        
-        var firstOpenPage = paginationInfo.openPages[0];
-
-        var currentSpineItem = _spine.getItemById(firstOpenPage.idref);
-
-        // If the current SpineItem is non-linear then go to Bookmarked position when you press Previous button.
-        if( !_spine.isValidLinearItem(currentSpineItem) ){
-            self.openSpineItemElementCfi(globalBookmark.idref, globalBookmark.contentCFI, self);
-            return;
-        }
-
     };
 
     function getSpineItem(idref) {
@@ -944,6 +929,7 @@ var ReaderView = function (options) {
             hrefPart = combinedPath;
             elementId = undefined;
         }
+
 
         var spineItem = _spine.getItemByHref(hrefPart);
         if (!spineItem) {
