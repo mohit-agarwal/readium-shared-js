@@ -46,7 +46,7 @@ define(["jquery", "underscore", "eventEmitter", "./fixed_view", "../helpers", ".
  * @param {Views.ReaderView.ReaderOptions} options
  * @constructor
  */
-var globalBookmark = "";
+var previousReadingLocationCFI = "";
 var ReaderView = function (options) {
 
     _.extend(this, new EventEmitter());
@@ -606,7 +606,7 @@ var ReaderView = function (options) {
 
         // If the current SpineItem is non-linear then go to Bookmarked position when you press Previous button.
         if (currentSpineItem.linear == 'no') {
-            self.openSpineItemElementCfi(globalBookmark.idref, globalBookmark.contentCFI, self);
+            self.openSpineItemElementCfi(previousReadingLocationCFI.idref, previousReadingLocationCFI.contentCFI, self);
             return;
         }
         
@@ -649,7 +649,7 @@ var ReaderView = function (options) {
         
         // If the current SpineItem is non-linear then go to Bookmarked position when you press Previous button.
         if (currentSpineItem.linear == 'no') {
-            self.openSpineItemElementCfi(globalBookmark.idref, globalBookmark.contentCFI, self);
+            self.openSpineItemElementCfi(previousReadingLocationCFI.idref, previousReadingLocationCFI.contentCFI, self);
             return;
         }
 
@@ -675,7 +675,7 @@ var ReaderView = function (options) {
 
         // If the current SpineItem is non-linear then go to Bookmarked position when you press Previous button.
         if (currentSpineItem.linear == 'no') {
-            self.openSpineItemElementCfi(globalBookmark.idref, globalBookmark.contentCFI, self);
+            self.openSpineItemElementCfi(previousReadingLocationCFI.idref, previousReadingLocationCFI.contentCFI, self);
             return;
         }
 
@@ -971,7 +971,7 @@ var ReaderView = function (options) {
      */
     this.openSpineItemElementId = function (idref, elementId, initiator) {
         // Bookmark the current position.
-        globalBookmark = _currentView.bookmarkCurrentPage();
+        previousReadingLocationCFI = _currentView.bookmarkCurrentPage();
         
         var spineItem = _spine.getItemById(idref);
         if (!spineItem) {
